@@ -82,21 +82,23 @@ function App() {
           <FormControl>
             <InputGroup marginBottom={2}>
               <Input
+                borderColor={"red"}
                 onChange={changeItemHandler}
                 value={item}
                 type={"text"}
                 placeholder="Enter an Item"
-                variant="filled"
+                // variant="filled"
                 _focus={{ ring: 2, ringColor: "red", border: 0 }}
               />
             </InputGroup>
             <InputGroup marginBottom={2}>
               <Input
+                borderColor={"red"}
                 onChange={changePriceHandler}
                 value={price}
                 type={"number"}
                 placeholder="Price of the item"
-                variant="filled"
+                // variant="filled"
                 _focus={{ ring: 2, ringColor: "red", border: 0 }}
               />
             </InputGroup>
