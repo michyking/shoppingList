@@ -43,21 +43,21 @@ function App() {
     }
   };
 
-  const displayShoppingItem = shopList.map((value) => {
+  const displayShoppingItem = shopList.map((value, i) => {
     const { id, item, price } = value;
 
     return (
-      <Text textTransform={"capitalize"} marginBottom={'7px'}>
+      <Text key={i} textTransform={"capitalize"} marginBottom={'7px'}>
         {item}
       </Text>
     );
   });
 
-  const displayShoppingPrice = shopList.map((value) => {
+  const displayShoppingPrice = shopList.map((value, i) => {
     const { id, item, price } = value;
 
     return (
-      <Text marginBottom={'7px'}>
+      <Text key={i} marginBottom={'7px'}>
         {`# ${price}`}
         <DeleteIcon onClick={() => deleteHandler(id)} marginLeft={"10px"}/>
       </Text>
@@ -162,7 +162,7 @@ function App() {
           onClick={clearList}
           colorScheme={"red"}
           marginTop={"40px"}
-          width={"20rem"}>
+          width={"17rem"}>
           Clear Items
         </Button>
       </VStack>
