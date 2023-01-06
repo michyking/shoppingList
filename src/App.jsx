@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { DeleteIcon } from '@chakra-ui/icons'
 import {
   Flex,
   VStack,
@@ -7,20 +8,7 @@ import {
   Input,
   InputGroup,
   Button,
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  List,
-  ListItem,
-  OrderedList,
-  ListIcon,
-  Alert,
-  AlertIcon,
+  Text,
 } from "@chakra-ui/react";
 
 function App() {
@@ -28,8 +16,6 @@ function App() {
   const [price, setPrice] = useState("");
 
   const [shopList, setShopList] = useState([]);
-
-  // console.log(shopList);
 
   const changeItemHandler = (e) => {
     setItem(e.target.value);
@@ -43,12 +29,17 @@ function App() {
     if (item && price) {
       setShopList((prev) => [
         ...prev,
-        { id: new Date().getMilliseconds(), item: item, price: price },
+        {
+          id: new Date().getMilliseconds(),
+          item: item,
+          price: price,
+          isEdit: false,
+        },
       ]);
       setItem("");
       setPrice("");
     } else {
-      alert("Please item or price cannot be blank")
+      alert("Please item or price cannot be blank");
     }
   };
 
@@ -56,9 +47,9 @@ function App() {
     const { id, item, price } = value;
 
     return (
-      <List>
-        <ListItem textTransform={"capitalize"}>{item}</ListItem>
-      </List>
+      <Text textTransform={"capitalize"} marginBottom={'7px'}>
+        {item}
+      </Text>
     );
   });
 
@@ -66,18 +57,60 @@ function App() {
     const { id, item, price } = value;
 
     return (
-      <List>
-        <ListItem>{`# ${price}`}</ListItem>
-      </List>
+      <Text marginBottom={'7px'}>
+        {`# ${price}`}
+        <DeleteIcon onClick={() => deleteHandler(id)} marginLeft={"10px"}/>
+      </Text>
     );
   });
 
+  const deleteHandler = (id) => {
+    const newShopList = shopList.filter((value) => value.id !== id);
+
+    setShopList(newShopList);
+  };
+
+  const editHandler = (id) => {
+    const newShopList = shopList.filter((value) => value.id !== id);
+    const selectedItem = shopList.find((value) => value.id === id);
+
+    setShopList({
+      shopList: newShopList,
+      item: selectedItem.item,
+      price: selectedItem.price,
+      id: id,
+      isEdit: true,
+    });
+  };
+
+  const totalPrice = shopList.reduce((total, list) => {
+    const { id, item, price } = list;
+    return total + Number(price);
+  }, 0);
+
+  // // OR IT CAN WORK LIKE THIS BELOW
+
+  // let total = 0;
+
+  // shopList.forEach(list => {
+  //   const {id, item, price} = list;
+  //   total = total + Number(price);
+  // })
+
+  const clearList = () => {
+    setShopList([]);
+  };
+
   return (
-    <Flex minHeight={"100vh"} justifyContent={"center"} alignItems={"center"}>
+    <Flex
+      className="App"
+      minHeight={"100vh"}
+      justifyContent={"center"}
+      alignItems={"center"}>
       <VStack>
         <VStack gap={2} as={"form"} marginBottom={35}>
           <Heading textTransform={"capitalize"} color={"red"}>
-            my shopping list
+            shopping notePad
           </Heading>
           <FormControl>
             <InputGroup marginBottom={2}>
@@ -111,28 +144,27 @@ function App() {
             Submit
           </Button>
         </VStack>
-        <TableContainer>
-          <Table variant="simple" colorScheme="red">
-            <Thead>
-              <Tr>
-                <Th>Items</Th>
-                <Th>Prices</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td> {displayShoppingItem}</Td>
-                <Td>{displayShoppingPrice}</Td>
-              </Tr>
-            </Tbody>
-            <Tfoot>
-              <Tr>
-                <Th>Total</Th>
-                <Th></Th>
-              </Tr>
-            </Tfoot>
-          </Table>
-        </TableContainer>
+        <div className="container">
+          <Heading className="h1" textAlign={"center"} fontSize={"1.4rem"}>
+            My list
+          </Heading>
+          <div className="Display">
+            <div>{displayShoppingItem}</div>
+            <div>{displayShoppingPrice}</div>
+          </div>
+          <div className="Display">
+            <div>TOTAL</div>
+            <div>{`# ${totalPrice}`}</div>
+          </div>
+          
+        </div>
+        <Button
+          onClick={clearList}
+          colorScheme={"red"}
+          marginTop={"40px"}
+          width={"20rem"}>
+          Clear Items
+        </Button>
       </VStack>
     </Flex>
   );
